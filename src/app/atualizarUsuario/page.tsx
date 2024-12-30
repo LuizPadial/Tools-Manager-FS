@@ -1,152 +1,112 @@
-'use client'
+'use client';
 
-import { Template, InputText, Button, FieldError, useNotification, AuthenticatedPage } from '@/components'
-import { useState } from 'react'
-import { useFormik } from 'formik'
-import { useRouter } from 'next/navigation'
-import { User } from '@/resources/user/users.resources'
+import React, { useState } from 'react';
+import { Template, AuthenticatedPage } from '@/components';
+import { useUserService } from '@/resources/userService/user.service'; // Importando o serviço de usuários
+import { User } from '@/resources/user/users.resources'; // Importando o tipo User
 
-export default function AtualizarUsuario() {
-    const [loading, setLoading] = useState(false)
-    const notification = useNotification()
-    const router = useRouter()
+const BuscarUsuarioPorMatricula: React.FC = () => {
+  const userService = useUserService(); // Acessando o serviço de usuários
+  const [matricula, setMatricula] = useState<string>(''); // Estado para armazenar a matrícula
+  const [usuario, setUsuario] = useState<User | null>(null); // Estado para armazenar o usuário encontrado
+  const [mensagemErro, setMensagemErro] = useState<string>(''); // Estado para mensagens de erro
+  const [loading, setLoading] = useState<boolean>(false); // Estado para mostrar carregamento
+  const [nome, setNome] = useState<string>(''); // Estado para o nome
+  const [username, setUsername] = useState<string>(''); // Estado para o username
+  const [biometricData, setBiometricData] = useState<string>(''); // Estado para dados biométricos
 
-    const { values, handleChange, handleSubmit, errors, resetForm } = useFormik<User>({
-        initialValues: {
-            name: '',
-            registration: '',
-            username: '',
-            password: '',
-            manager: false,
-            biometricData: '',
-        },
-        onSubmit: onSubmit,
-    })
-
-    async function onSubmit(values: User) {
-        setLoading(true)
-        try {
-            const userToUpdate = { ...values, manager: Boolean(values.manager) }
-
-            // Enviar os dados para a API para atualizar o usuário pela matrícula (registration)
-            const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/users/registration/${values.registration}`, {
-                method: 'PUT',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify(userToUpdate),
-            })
-
-            if (response.ok) {
-                notification.notify('Usuário atualizado com sucesso!', 'success')
-                resetForm()
-                router.push('/users') // Redirecionar para a página de usuários
-            } else {
-                const message = await response.text()
-                notification.notify(message || 'Erro ao atualizar usuário', 'error')
-            }
-        } catch (error: any) {
-            notification.notify(error?.message || 'Erro ao atualizar usuário', 'error')
-        } finally {
-            setLoading(false)
-        }
+  const handleBuscar = async () => {
+    if (!matricula.trim()) {
+      setMensagemErro('Por favor, insira uma matrícula válida.');
+      return;
     }
 
-    return (
-        <AuthenticatedPage>
-            <Template loading={loading}>
-                <div className='flex min-h-full flex-1 flex-col justify-center px-6 py-12 lg:px-8'>
-                    <div className='sm:mx-auto sm:w-full sm:max-w-sm'>
-                        <h2 className='mt-10 text-center text-1xl font-bold leading-9 tracking-tight text-gray-900'>
-                            Atualizar Usuário
-                        </h2>
-                    </div>
+    setLoading(true);
+    setMensagemErro('');
+    try {
+      // Chamando o método buscarPorMatricula do serviço
+      const usuariosEncontrados = await userService.buscarPorMatricula(matricula);
 
-                    <div className='mt-10 sm:mx-auto sm:w-full sm:max-w-sm'>
-                        <form onSubmit={handleSubmit} className='space-y-2'>
-                            <div>
-                                <label className='block text-sm font-medium leading-6 text-gray-900'>Matrícula: </label>
-                            </div>
-                            <div className='mt-2'>
-                                <InputText
-                                    style='w-full'
-                                    id='registration'
-                                    value={values.registration}
-                                    onChange={handleChange}
-                                />
-                                <FieldError error={errors.registration} />
-                            </div>
+      if (usuariosEncontrados.length === 0) {
+        setMensagemErro('Usuário não encontrado para essa matrícula.');
+        setUsuario(null); // Limpa o estado do usuário caso não encontre
+      } else {
+        const usuarioEncontrado = usuariosEncontrados[0]; // Assume que o primeiro usuário é o correto
+        setUsuario(usuarioEncontrado);
+        // Preenche os campos para edição com os dados do usuário encontrado
+        setNome(usuarioEncontrado.name || ''); // Garantir que não seja undefined
+        setUsername(usuarioEncontrado.username || ''); // Garantir que não seja undefined
+        setBiometricData(usuarioEncontrado.biometricData || ''); // Garantir que não seja undefined
+      }
+    } catch (error) {
+      setMensagemErro('Erro ao buscar usuário. Tente novamente.');
+      console.error("Erro ao buscar usuário por matrícula", error);
+    } finally {
+      setLoading(false);
+    }
+  };
 
-                            <div>
-                                <label className='block text-sm font-medium leading-6 text-gray-900'>Nome: </label>
-                            </div>
-                            <div className='mt-2'>
-                                <InputText
-                                    style='w-full'
-                                    id='name'
-                                    value={values.name}
-                                    onChange={handleChange}
-                                />
-                                <FieldError error={errors.name} />
-                            </div>
+  const handleAtualizar = async () => {
+    if (!usuario) {
+      setMensagemErro('Nenhum usuário encontrado para atualização.');
+      return;
+    }
 
-                            <div>
-                                <label className='block text-sm font-medium leading-6 text-gray-900'>Nome de Usuário: </label>
-                            </div>
-                            <div className='mt-2'>
-                                <InputText
-                                    style='w-full'
-                                    id='username'
-                                    value={values.username}
-                                    onChange={handleChange}
-                                />
-                                <FieldError error={errors.username} />
-                            </div>
+    const updatedUser = { ...usuario, name: nome, username, biometricData };
 
-                            <div>
-                                <label className='block text-sm font-medium leading-6 text-gray-900'>Senha: </label>
-                            </div>
-                            <div className='mt-2'>
-                                <InputText
-                                    style='w-full'
-                                    type="password"
-                                    id='password'
-                                    value={values.password}
-                                    onChange={handleChange}
-                                />
-                                <FieldError error={errors.password} />
-                            </div>
+    try {
+      await userService.atualizar(updatedUser);
+      setMensagemErro('');
+      alert('Usuário atualizado com sucesso!');
+    } catch (error) {
+      setMensagemErro('Erro ao atualizar usuário. Tente novamente.');
+      console.error("Erro ao atualizar o usuário", error);
+    }
+  };
 
-                            <div>
-                                <label className='block text-sm font-medium leading-6 text-gray-900'>Dados Biométricos: </label>
-                            </div>
-                            <div className='mt-2'>
-                                <InputText
-                                    style='w-full'
-                                    id='biometricData'
-                                    value={values.biometricData}
-                                    onChange={handleChange}
-                                />
-                                <FieldError error={errors.biometricData} />
-                            </div>
+  return (
+    <AuthenticatedPage>
+      <Template loading={loading}>
+        <div className="container mx-auto p-4">
+          <h2 className="text-center text-2xl font-bold mb-4">Buscar Usuário por Matrícula</h2>
+          <div className="flex flex-col items-center">
+            <input
+              type="text"
+              value={matricula}
+              onChange={(e) => setMatricula(e.target.value)}
+              placeholder="Digite a matrícula"
+              className="border p-2 w-64 mb-2"
+            />
+            {mensagemErro && <p className="text-red-500 mb-2">{mensagemErro}</p>}
+            <button
+              onClick={handleBuscar}
+              className="bg-blue-500 text-white p-2 w-32 hover:bg-blue-700"
+            >
+              Buscar
+            </button>
+          </div>
 
-                            <div>
-                                <Button
-                                    type='submit'
-                                    style='bg-indigo-700 hover:bg-indigo-500'
-                                    label='Atualizar'
-                                />
-                                <Button
-                                    type='button'
-                                    style='bg-red-700 hover:bg-red-500 mx-2'
-                                    label='Cancelar'
-                                    onClick={() => router.push('/users')}
-                                />
-                            </div>
-                        </form>
-                    </div>
-                </div>
-            </Template>
-        </AuthenticatedPage>
-    )
-}
+          {usuario && (
+            <div className="mt-4">
+              <h3 className="text-xl font-semibold">Usuário Encontrado:</h3>
+              <div>
+                <p><strong>Nome:</strong> <input type="text" value={nome} onChange={(e) => setNome(e.target.value)} className="border p-2 mb-2" /></p>
+                <p><strong>Matrícula:</strong> {usuario.registration}</p>
+                <p><strong>Username:</strong> <input type="text" value={username} onChange={(e) => setUsername(e.target.value)} className="border p-2 mb-2" /></p>
+                <p><strong>Dados Biométricos:</strong> <input type="text" value={biometricData} onChange={(e) => setBiometricData(e.target.value)} className="border p-2 mb-2" /></p>
+              </div>
+              <button
+                onClick={handleAtualizar}
+                className="bg-green-500 text-white p-2 w-32 hover:bg-green-700"
+              >
+                Atualizar
+              </button>
+            </div>
+          )}
+        </div>
+      </Template>
+    </AuthenticatedPage>
+  );
+};
+
+export default BuscarUsuarioPorMatricula;

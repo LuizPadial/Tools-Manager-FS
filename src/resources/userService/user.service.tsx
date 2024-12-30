@@ -50,16 +50,19 @@ class UserService {
         return response.headers.get('location') ?? ''; // Retorna a URL do novo usuário, caso a criação tenha sucesso
     }
 
-    //atualizar por ID
+
+    //atualizar por matricula
     async atualizar(user: User): Promise<Response> {
-        const userSession = this.auth.getUserSession();
-        const response = await fetch(`${this.baseURL}/${user.id}`, { // Adiciona o ID após a baseURL
+        const userSession = this.auth.getUserSession(); // Obter a sessão do usuário
+       
+        const response = await fetch(`${this.baseURL}/atualizar/${user.registration}`, {
             method: 'PUT',
             body: JSON.stringify(user),
             headers: {
                 "Content-Type": "application/json",
-                "Authorization": `Bearer ${userSession?.accessToken}`,
-            }
+                "Authorization": `Bearer ${userSession?.accessToken}`, // Correção de interpolação
+                
+            },
         });
     
         if (!response.ok) {
@@ -69,9 +72,7 @@ class UserService {
     
         return response; // Retorna a resposta
     }
- 
     
- 
 }
 
 export const useUserService = () => new UserService(); // Hook para acessar o serviço

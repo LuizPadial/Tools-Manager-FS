@@ -11,8 +11,6 @@ const UsersPage: React.FC = () => {
   const [loading, setLoading] = useState<boolean>(false); // Estado de carregamento
   const [searchMatricula, setSearchMatricula] = useState<string>(''); // Estado para a matrícula de busca
   const [errorMessage, setErrorMessage] = useState<string>(''); // Estado para a mensagem de erro
-  const [selectedUser, setSelectedUser] = useState<User | null>(null); // Usuário selecionado para editar
-  const [isModalOpen, setIsModalOpen] = useState<boolean>(false); // Estado do modal
 
   useEffect(() => {
     const fetchUsers = async () => {
@@ -54,14 +52,6 @@ const UsersPage: React.FC = () => {
     }
   };
 
-  const handleEditUser = (user: User) => {
-    setSelectedUser(user); // Define o usuário selecionado para edição
-    setIsModalOpen(true); // Abre o modal de edição
-  };
-
-  const handleCloseModal = () => {
-    setIsModalOpen(false); // Fecha o modal
-  };
 
   return (
     <AuthenticatedPage>
