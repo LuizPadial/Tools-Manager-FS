@@ -73,7 +73,7 @@ const Header: React.FC = () => {
     return (
         <header className="bg-indigo-950 text-white py-3">
             <div className="container mx-auto flex justify-between items-center px-4">
-                <Link href="/galeria">
+                <Link href="/dashboard">
                     <h1 className="text-3xl font-bold">Tools Manager</h1>
                 </Link>
                 {/* Adicionando o link para a página Home */}

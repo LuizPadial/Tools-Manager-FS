@@ -1,0 +1,69 @@
+/* Container principal */
+.dashboard-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+    text-align: center;
+  }
+  
+  /* Título */
+  .dashboard-title {
+    font-size: 2.5rem;
+    font-weight: bold;
+    margin-bottom: 20px;
+    color: #333;
+  }
+  
+  /* Grade de links */
+  .dashboard-links {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 20px;
+  }
+  
+  /* Cartões */
+  .dashboard-card {
+    display: block;
+    padding: 20px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    text-align: left;
+    background-color: #f9f9f9;
+    text-decoration: none;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+  }
+  
+  /* Conteúdo dos cartões */
+  .card-content h2 {
+    font-size: 1.2rem;
+    color: #0056b3;
+    margin-bottom: 10px;
+  }
+  
+  .card-content p {
+    font-size: 0.9rem;
+    color: #666;
+  }
+  
+  /* Efeitos de hover */
+  .dashboard-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    background-color: #fff;
+  }
+  
+  /* Responsividade */
+  @media (max-width: 768px) {
+    .dashboard-container {
+      padding: 10px;
+    }
+  
+    .dashboard-title {
+      font-size: 2rem;
+    }
+  
+    .card-content h2 {
+      font-size: 1rem;
+    }
+  }
+  
