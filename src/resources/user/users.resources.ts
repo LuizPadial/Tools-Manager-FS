@@ -4,7 +4,7 @@ export class User {
     registration?: string;    // Matrícula do usuário
     username?: string;        // Nome de usuário
     password?: string;        // Senha do usuário
-    isManager?: boolean;      // Campo para indicar se o usuário é gestor
+    manager?: boolean;      // Campo para indicar se o usuário é gestor
     biometricData?: string;   // Dados biométricos do usuário
 }
 
@@ -24,6 +24,6 @@ export class UserSessionToken {
     expiration?: number;      // Data de expiração do token
     id?: number;              // Novo campo ID
     registration?: string;    // Matrícula do usuário
-    isManager?: boolean;      // Campo para indicar se o usuário é gestor
+    manager?: boolean;      // Campo para indicar se o usuário é gestor
     biometricData?: string;   // Dados biométricos do usuário
 }

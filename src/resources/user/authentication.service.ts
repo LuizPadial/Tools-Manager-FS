@@ -5,7 +5,7 @@ class AuthService {
     baseURL: string = process.env.NEXT_PUBLIC_API_URL + '/users';
     static AUTH_PARAM: string = "_auth";
 
-    async authenticate(credentials: Credentials) : Promise<AccessToken> {
+    async authenticate(credentials: Credentials): Promise<AccessToken> {
         const response = await fetch(this.baseURL + "/auth", {
             method: 'POST',
             body: JSON.stringify(credentials),
@@ -13,12 +13,18 @@ class AuthService {
                 "Content-Type": "application/json"
             }
         });
-
-        if(response.status == 401){
-            throw new Error("User or password are incorrect!");
+    
+        if (response.status === 401) {
+            throw new Error("Usuário não autorizado!");
         }
-
-        return await response.json();
+    
+        const accessToken = await response.json();
+    
+        if (!accessToken || accessToken.error === "Unauthorized") { // Verifica se o usuário não é um manager
+            throw new Error("Você não tem permissão para acessar o sistema.");
+        }
+    
+        return accessToken;
     }
 
     async save(user: User) : Promise<void> {

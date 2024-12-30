@@ -8,9 +8,10 @@ import './DashboardPage.css'; // Importa o arquivo de estilos
 const DashboardPage: React.FC = () => {
     const pages = [
         { name: 'Buscar Usuários', path: '/users' },
+        { name: 'Cadastrar Novo Usuário', path: '/cadastroUsuario' },
         { name: 'Galeria de Ferramentas', path: '/galeria' },
         { name: 'Buscar Ferramentas', path: '/tools' },
-        { name: 'Relatórios', path: '/reports' },
+        { name: 'Atualizar Usuário', path: '/atualizarUsuario' },
         // Adicione novos links aqui no formato { name: 'Nome da Página', path: '/rota' }
       ];
 

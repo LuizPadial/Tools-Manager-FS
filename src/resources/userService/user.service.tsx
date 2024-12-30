@@ -16,6 +16,24 @@ class UserService {
         });
         return await response.json(); // Retorna a lista de usuários
     }
+
+    
+    async buscarPorMatricula(matricula: string): Promise<User[]> {
+        const userSession = this.auth.getUserSession();
+        const url = `${this.baseURL}/registration/${matricula}`; // Caminho da URL com matrícula
+    
+        const response = await fetch(url, {
+            headers: {
+                "Authorization": `Bearer ${userSession?.accessToken}`,
+            }
+        });
+    
+        if (!response.ok) {
+            throw new Error("Erro ao buscar usuário por matrícula");
+        }
+    
+        return await response.json();
+    }  
     
     // Método para salvar um novo usuário (caso necessário)
     async salvar(user: User): Promise<string> {
@@ -32,23 +50,28 @@ class UserService {
         return response.headers.get('location') ?? ''; // Retorna a URL do novo usuário, caso a criação tenha sucesso
     }
 
-    async buscarPorMatricula(matricula: string): Promise<User[]> {
+    //atualizar por ID
+    async atualizar(user: User): Promise<Response> {
         const userSession = this.auth.getUserSession();
-        const url = `${this.baseURL}/registration/${matricula}`; // Caminho da URL com matrícula
-    
-        const response = await fetch(url, {
+        const response = await fetch(`${this.baseURL}/${user.id}`, { // Adiciona o ID após a baseURL
+            method: 'PUT',
+            body: JSON.stringify(user),
             headers: {
+                "Content-Type": "application/json",
                 "Authorization": `Bearer ${userSession?.accessToken}`,
             }
         });
     
         if (!response.ok) {
-            throw new Error("Erro ao buscar usuário por matrícula");
+            const errorText = await response.text(); // Captura qualquer mensagem de erro do backend
+            throw new Error(`Erro ao atualizar o usuário: ${errorText}`);
         }
     
-        return await response.json();
+        return response; // Retorna a resposta
     }
+ 
     
+ 
 }
 
 export const useUserService = () => new UserService(); // Hook para acessar o serviço
