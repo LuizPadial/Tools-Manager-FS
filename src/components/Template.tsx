@@ -77,7 +77,7 @@ const Header: React.FC = () => {
                     <h1 className="text-3xl font-bold">Tools Manager</h1>
                 </Link>
                 {/* Adicionando o link para a página Home */}
-                <Link href="/home"></Link>
+                <Link href="/dashboard"></Link>
                 <RenderIf condition={!!user}>
                     <div className="flex items-center">
                         <div className="relative">
