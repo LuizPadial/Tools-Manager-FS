@@ -1,114 +1,3 @@
-// "use client";
-
-// import React, { useEffect, useState } from 'react';
-// import { useToolService } from '@/resources/ferramentaService/ferramenta.service';
-// import { Tool } from '@/resources/ferramenta/ferramenta';
-// import { Template } from '@/components/Template';
-// import { AuthenticatedPage } from '@/components/AuthenticatedPage';
-
-// const FerramentasListar: React.FC = () => {
-//   const toolService = useToolService(); // Serviço de ferramentas
-//   const [ferramentas, setFerramentas] = useState<Tool[]>([]); // Estado para ferramentas
-//   const [loading, setLoading] = useState<boolean>(false); // Estado de carregamento
-//   const [searchQuery, setSearchQuery] = useState<string>(''); // Estado para busca por nome
-//   const [errorMessage, setErrorMessage] = useState<string>(''); // Estado para mensagens de erro
-
-//   // Fetch inicial das ferramentas
-//   useEffect(() => {
-//     const fetchFerramentas = async () => {
-//       setLoading(true);
-//       try {
-//         const ferramentasList = await toolService.listar();
-//         setFerramentas(ferramentasList);
-//       } catch (error) {
-//         console.error("Erro ao buscar ferramentas", error);
-//       } finally {
-//         setLoading(false);
-//       }
-//     };
-
-//     fetchFerramentas();
-//   }, []); // Nenhuma dependência para evitar loop infinito
-
-//   // Função para buscar ferramentas por nome
-//   const handleSearch = async () => {
-//     setLoading(true);
-//     try {
-//       if (searchQuery.trim() === '') {
-//         const ferramentasList = await toolService.listar();
-//         setFerramentas(ferramentasList);
-//         setErrorMessage('');
-//       } else {
-//         const ferramentasList = await toolService.buscarPorNome(searchQuery);
-//         if (ferramentasList.length === 0) {
-//           setErrorMessage('Nenhuma ferramenta encontrada com esse nome.');
-//         } else {
-//           setErrorMessage('');
-//           setFerramentas(ferramentasList);
-//         }
-//       }
-//     } catch (error) {
-//       console.error("Erro ao buscar ferramentas por nome", error);
-//       setErrorMessage('Erro ao buscar ferramentas.');
-//     } finally {
-//       setLoading(false);
-//     }
-//   };
-
-//   return (
-//     <AuthenticatedPage>
-//       <Template>
-//         <div className="container mx-auto p-4">
-//           {loading ? (
-//             <p>Carregando ferramentas...</p>
-//           ) : (
-//             <>
-//               <div className="mb-4">
-//                 <input
-//                   type="text"
-//                   value={searchQuery}
-//                   onChange={(e) => setSearchQuery(e.target.value)}
-//                   placeholder="Digite o nome ou parte do nome da ferramenta"
-//                   className="border p-2"
-//                 />
-//                 <button onClick={handleSearch} className="ml-2 p-2 bg-blue-500 text-white">
-//                   Buscar
-//                 </button>
-//               </div>
-//               {errorMessage && <p className="text-red-500">{errorMessage}</p>}
-//               <div className="overflow-x-auto">
-//                 <table className="table-auto w-full border-collapse">
-//                   <thead>
-//                     <tr>
-//                       <th className="border p-2">ID</th>
-//                       <th className="border p-2">Nome</th>
-//                       <th className="border p-2">Descrição</th>
-//                       <th className="border p-2">Disponível</th>
-//                     </tr>
-//                   </thead>
-//                   <tbody>
-//                     {ferramentas.map((ferramenta) => (
-//                       <tr key={ferramenta.id}>
-//                         <td className="border p-2">{ferramenta.id}</td>
-//                         <td className="border p-2">{ferramenta.name}</td>
-//                         <td className="border p-2">{ferramenta.description}</td>
-//                         <td className="border p-2">{ferramenta.available ? 'Sim' : 'Não'}</td>
-//                       </tr>
-//                     ))}
-//                   </tbody>
-//                 </table>
-//               </div>
-//             </>
-//           )}
-//         </div>
-//       </Template>
-//     </AuthenticatedPage>
-//   );
-// };
-
-// export default FerramentasListar;
-
-
 "use client";
 
 import React, { useEffect, useState } from "react";
@@ -273,7 +162,7 @@ const FerramentasListar: React.FC = () => {
                   }
                   className="border p-2 mb-4 w-full"
                 />
-                {/* <label className="block mb-2">Disponível:</label>
+                <label className="block mb-2">Disponível:</label>
                 <input
                   type="checkbox"
                   checked={selectedTool.available}
@@ -281,7 +170,7 @@ const FerramentasListar: React.FC = () => {
                     setSelectedTool({ ...selectedTool, available: e.target.checked })
                   }
                   className="mb-4"
-                /> */}
+                /> 
                 <div className="flex justify-end">
                   <button
                     onClick={handleSaveChanges}

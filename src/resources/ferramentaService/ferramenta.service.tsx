@@ -82,6 +82,27 @@ class ToolService {
     
         return await response.json(); // Retorna a ferramenta atualizada
     }
+
+    async atualizarDisponibilidade(id: number, ferramenta: { available: boolean }): Promise<Tool> {
+        const userSession = this.auth.getUserSession(); // Obtém a sessão do usuário autenticado
+        const url = `${this.baseURL}/${id}`; // URL para atualizar uma ferramenta específica
+    
+        const response = await fetch(url, {
+            method: 'PUT', // Método HTTP para atualização de recurso
+            headers: {
+                "Authorization": `Bearer ${userSession?.accessToken}`, // Cabeçalho com o token Bearer
+                "Content-Type": "application/json", // Cabeçalho indicando JSON no corpo
+            },
+            body: JSON.stringify(ferramenta), // Serializa a ferramenta para JSON
+        });
+    
+        if (!response.ok) {
+            throw new Error(`Erro ao atualizar disponibilidade da ferramenta: ${response.statusText}`);
+        }
+    
+        return await response.json(); // Retorna a ferramenta atualizada
+    }
+    
     
     
 }
