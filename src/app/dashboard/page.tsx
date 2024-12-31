@@ -10,8 +10,9 @@ const DashboardPage: React.FC = () => {
         { name: 'Buscar Usuários', path: '/users' },
         { name: 'Cadastrar Novo Usuário', path: '/cadastroUsuario' },
         { name: 'Galeria de Ferramentas', path: '/galeria' },
-        { name: 'Buscar Ferramentas', path: '/tools' },
+        { name: 'Buscar Ferramentas', path: '/ferramentas' },
         { name: 'Atualizar Usuário', path: '/atualizarUsuario' },
+        { name: 'Cadastrar Ferramenta', path: '/cadastrarFerramenta' },
         // Adicione novos links aqui no formato { name: 'Nome da Página', path: '/rota' }
       ];
 
